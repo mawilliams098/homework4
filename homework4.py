@@ -33,13 +33,28 @@ for row in list_of_books.find_all('li'):
     availability = price_div.find('p', class_="instock availability").text
     single_book["Availability"] = availability.strip()
 
+    # scrape star rating
+    rating_div = row.p['class']
+    if rating_div[1] == 'One':
+        rating_div[1] = 1
+    elif rating_div[1] == 'Two':
+        rating_div[1] = 2
+    elif rating_div[1] == 'Three':
+        rating_div[1] = 3
+    elif rating_div[1] == 'Four':
+        rating_div[1] = 4
+    else:
+        rating_div[1] = 5
+
+    single_book['Rating'] = rating_div[1]
+
     # add single book instance to list of all books
     total_books.append(single_book)
 
 
 filename = 'books_list.csv'
 with open(filename, 'w', newline='') as f: 
-    w = csv.DictWriter(f,['Title', 'Price', 'Availability']) 
+    w = csv.DictWriter(f,['Title', 'Price', 'Availability', 'Rating']) 
     w.writeheader() 
     for book in total_books: 
         w.writerow(book) 
