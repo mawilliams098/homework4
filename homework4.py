@@ -19,7 +19,28 @@ list_of_books = div_above_table.find('ol', class_="row")
 for row in list_of_books.find_all('li'): 
 
     single_book = {}
+
+    # scrape book title
     title = row.h3.a["title"]
     single_book["Title"] = title
-    print(single_book)
+
+    # scrape book price
+    price_div = row.find('div', class_="product_price")
+    price = price_div.find('p', class_="price_color").text
+    single_book["Price"] = price
+
+    # scrape availability
+    availability = price_div.find('p', class_="instock availability").text
+    single_book["Availability"] = availability.strip()
+
+    # add single book instance to list of all books
+    total_books.append(single_book)
+
+
+filename = 'books_list.csv'
+with open(filename, 'w', newline='') as f: 
+    w = csv.DictWriter(f,['Title', 'Price', 'Availability']) 
+    w.writeheader() 
+    for book in total_books: 
+        w.writerow(book) 
 
