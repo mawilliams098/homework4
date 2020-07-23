@@ -1,0 +1,10 @@
+(True, {'Title': "A Spy's Devotion (The Regency Spies of London #1)", 'Price': 16.97, 'Availability': 'In stock', 'Rating': 5, 'Link': 'http://books.toscrape.com/a-spys-devotion-the-regency-spies-of-london-1_3/index.html'})
+Most expensive book =  59.99
+Cheapest book =  10.0
+Average Price for 1 star book =  34.56
+Average Price for 2 star book =  34.81
+Average Price for 3 star book =  34.69
+Average Price for 4 star book =  36.09
+Average Price for 5 star book =  35.37
+Correlation between price and raiting =  0.02816623948587317
+Average overall rating =  2.92

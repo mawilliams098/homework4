@@ -6,6 +6,8 @@ Andre Zazzera (alz9cb), Annie Williams (maw3as)
 import csv
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
+from numpy import *
 
 
 total_books = []
@@ -74,8 +76,6 @@ with open(filename, 'w', newline='') as f:
 total_books_sorted = sorted(total_books, key = lambda i: i['Title'])
 
 
-
-
 # binary search for a book title
 def binarySearchbooks(item_list, title):
     start = 0
@@ -94,7 +94,29 @@ def binarySearchbooks(item_list, title):
                 start = mid + 1
     return found, info # returns boolean, book info from the list
 
-    
-
-
 print(binarySearchbooks(total_books_sorted, "A Spy's Devotion (The Regency Spies of London #1)"))
+
+
+# DATA EXPLORATION
+
+# read in csv
+books = pd.read_csv("books_list.csv")
+
+# most expensive book
+print("Most expensive book = ", max(books['Price'])) # 59.99
+
+# cheapest book
+print("Cheapest book = ", min(books['Price'])) # 10
+
+# average price of book
+print("Average Price for 1 star book = ", round(mean(books[books['Rating'] == 1])['Price'], 2))
+print("Average Price for 2 star book = ", round(mean(books[books['Rating'] == 2])['Price'], 2))
+print("Average Price for 3 star book = ", round(mean(books[books['Rating'] == 3])['Price'], 2))
+print("Average Price for 4 star book = ", round(mean(books[books['Rating'] == 4])['Price'], 2))
+print("Average Price for 5 star book = ", round(mean(books[books['Rating'] == 5])['Price'], 2))
+
+# correlation 
+print("Correlation between price and raiting = ", books.corr()['Price']['Rating'])
+
+# average rating 
+print("Average overall rating = ", round(mean(books['Rating']), 2))
