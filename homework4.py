@@ -7,13 +7,17 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 
-soup = BeautifulSoup(open("books.html"), 'html.parser')
+# approach of downloading html manually
+# soup = BeautifulSoup(open("books.html"), 'html.parser')
 
 total_books = []
 
 for i in range(1,51):
 
+    # fetch html
     URL = 'http://books.toscrape.com/catalogue/page-'+str(i)+'.html'
+    r = requests.get(URL)
+    soup = BeautifulSoup(r.content, 'html5lib')
 
     # find the main div that the books are on
     table = soup.find('div', class_ = "col-sm-8 col-md-9")
