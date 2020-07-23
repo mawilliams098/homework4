@@ -1,6 +1,6 @@
 """
 Homework: Python and Web Scraper
-Andre Zazzera (), Annie Williams (maw3as)
+Andre Zazzera (alz9cb), Annie Williams (maw3as)
 """
 
 import csv
@@ -12,7 +12,7 @@ soup = BeautifulSoup(open("books.html"), 'html.parser')
 total_books = []
 
 for i in range(1,51):
-    
+
     URL = 'http://books.toscrape.com/catalogue/page-'+str(i)+'.html'
 
     # find the main div that the books are on
@@ -31,7 +31,7 @@ for i in range(1,51):
         # scrape book price
         price_div = row.find('div', class_="product_price")
         price = price_div.find('p', class_="price_color").text
-        single_book["Price"] = price
+        single_book["Price"] = float(price[1:])
 
         # scrape availability
         availability = price_div.find('p', class_="instock availability").text
@@ -62,4 +62,3 @@ with open(filename, 'w', newline='') as f:
     w.writeheader() 
     for book in total_books: 
         w.writerow(book) 
-
