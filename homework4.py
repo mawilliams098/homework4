@@ -1,6 +1,6 @@
 """
 Homework: Python and Web Scraper
-
+Andre Zazzera (), Annie Williams (maw3as)
 """
 
 import csv
@@ -11,45 +11,49 @@ soup = BeautifulSoup(open("books.html"), 'html.parser')
 
 total_books = []
 
-# find the main div that the books are on
-table = soup.find('div', class_ = "col-sm-8 col-md-9")
-div_above_table = table.section.div.find_next_sibling()
-list_of_books = div_above_table.find('ol', class_="row")
+for i in range(1,51):
+    
+    URL = 'http://books.toscrape.com/catalogue/page-'+str(i)+'.html'
 
-for row in list_of_books.find_all('li'): 
+    # find the main div that the books are on
+    table = soup.find('div', class_ = "col-sm-8 col-md-9")
+    div_above_table = table.section.div.find_next_sibling()
+    list_of_books = div_above_table.find('ol', class_="row")
 
-    single_book = {}
+    for row in list_of_books.find_all('li'): 
 
-    # scrape book title
-    title = row.h3.a["title"]
-    single_book["Title"] = title
+        single_book = {}
 
-    # scrape book price
-    price_div = row.find('div', class_="product_price")
-    price = price_div.find('p', class_="price_color").text
-    single_book["Price"] = price
+        # scrape book title
+        title = row.h3.a["title"]
+        single_book["Title"] = title
 
-    # scrape availability
-    availability = price_div.find('p', class_="instock availability").text
-    single_book["Availability"] = availability.strip()
+        # scrape book price
+        price_div = row.find('div', class_="product_price")
+        price = price_div.find('p', class_="price_color").text
+        single_book["Price"] = price
 
-    # scrape star rating
-    rating_div = row.p['class']
-    if rating_div[1] == 'One':
-        rating_div[1] = 1
-    elif rating_div[1] == 'Two':
-        rating_div[1] = 2
-    elif rating_div[1] == 'Three':
-        rating_div[1] = 3
-    elif rating_div[1] == 'Four':
-        rating_div[1] = 4
-    else:
-        rating_div[1] = 5
+        # scrape availability
+        availability = price_div.find('p', class_="instock availability").text
+        single_book["Availability"] = availability.strip()
 
-    single_book['Rating'] = rating_div[1]
+        # scrape star rating
+        rating_div = row.p['class']
+        if rating_div[1] == 'One':
+            rating_div[1] = 1
+        elif rating_div[1] == 'Two':
+            rating_div[1] = 2
+        elif rating_div[1] == 'Three':
+            rating_div[1] = 3
+        elif rating_div[1] == 'Four':
+            rating_div[1] = 4
+        else:
+            rating_div[1] = 5
 
-    # add single book instance to list of all books
-    total_books.append(single_book)
+        single_book['Rating'] = rating_div[1]
+
+        # add single book instance to list of all books
+        total_books.append(single_book)
 
 
 filename = 'books_list.csv'
