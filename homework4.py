@@ -66,3 +66,24 @@ with open(filename, 'w', newline='') as f:
     w.writeheader() 
     for book in total_books: 
         w.writerow(book) 
+
+
+# sort total_books list
+total_books_sorted = sorted(total_books, key = lambda i: i['Title'])
+# binary search for a book title
+def binarySearchbooks(item_list, title):
+    start = 0
+    end = len(item_list)
+    found = False
+    info = []
+    while(start <= end and not found):
+        mid = (start + end) // 2
+        if item_list[mid]['Title'] == title:
+            found = True
+            info = item_list[mid]
+        else:
+            if item_list[mid]['Title'] > title:
+                end = mid - 1
+            else:
+                start = mid + 1
+    return found, info # returns boolean, book info from the list
