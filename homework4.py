@@ -7,40 +7,38 @@ import csv
 import requests
 from bs4 import BeautifulSoup
 
-# approach of downloading html manually
-# soup = BeautifulSoup(open("books.html"), 'html.parser')
 
 total_books = []
-
 for i in range(1,51):
-
-    # fetch html
     URL = 'http://books.toscrape.com/catalogue/page-'+str(i)+'.html'
     r = requests.get(URL)
     soup = BeautifulSoup(r.content, 'html5lib')
-
-    # find the main div that the books are on
-    table = soup.find('div', class_ = "col-sm-8 col-md-9")
+    #print(soup.prettify())
+    
+    table = soup.find('div', class_ = 'col-sm-8 col-md-9')
+    #print(table.section)
+    
     div_above_table = table.section.div.find_next_sibling()
-    list_of_books = div_above_table.find('ol', class_="row")
+    list_of_books = div_above_table.find('ol', class_='row')
+    
 
-    for row in list_of_books.find_all('li'): 
-
+    
+    for row in list_of_books.find_all('li'):
+        
+        # scrape book titles
         single_book = {}
-
-        # scrape book title
-        title = row.h3.a["title"]
-        single_book["Title"] = title
-
+        title = row.h3.a['title']
+        single_book['Title'] = title
+        
         # scrape book price
         price_div = row.find('div', class_="product_price")
         price = price_div.find('p', class_="price_color").text
         single_book["Price"] = float(price[1:])
-
+        
         # scrape availability
         availability = price_div.find('p', class_="instock availability").text
         single_book["Availability"] = availability.strip()
-
+        
         # scrape star rating
         rating_div = row.p['class']
         if rating_div[1] == 'One':
@@ -53,23 +51,31 @@ for i in range(1,51):
             rating_div[1] = 4
         else:
             rating_div[1] = 5
-
         single_book['Rating'] = rating_div[1]
-
+        
+        # scrape catalogue reference
+        ref = row.h3.a['href']
+        single_book['Link'] = 'http://books.toscrape.com/'+ref
+        
         # add single book instance to list of all books
         total_books.append(single_book)
+    
 
-
+    
 filename = 'books_list.csv'
 with open(filename, 'w', newline='') as f: 
-    w = csv.DictWriter(f,['Title', 'Price', 'Availability', 'Rating']) 
+    w = csv.DictWriter(f,['Title', 'Price', 'Availability', 'Rating', 'Link']) 
     w.writeheader() 
     for book in total_books: 
-        w.writerow(book) 
-
-
-# sort total_books list
+        w.writerow(book)
+    
+#%%
+# sort total_books list        
 total_books_sorted = sorted(total_books, key = lambda i: i['Title'])
+
+
+
+
 # binary search for a book title
 def binarySearchbooks(item_list, title):
     start = 0
@@ -87,3 +93,8 @@ def binarySearchbooks(item_list, title):
             else:
                 start = mid + 1
     return found, info # returns boolean, book info from the list
+
+    
+
+
+print(binarySearchbooks(total_books_sorted, "A Spy's Devotion (The Regency Spies of London #1)"))
